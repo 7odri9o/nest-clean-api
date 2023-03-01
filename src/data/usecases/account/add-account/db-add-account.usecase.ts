@@ -1,7 +1,7 @@
 import {
   LOAD_ACCOUNT_BY_EMAIL_REPOSITORY,
   LoadAccountByEmailRepository,
-} from '@/data/protocols/load-account-by-email.repository';
+} from '@/data/protocols/database/account/load-account-by-email.repository';
 import { AccountModel } from '@/domain/models';
 import {
   AddAccount,

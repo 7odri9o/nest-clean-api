@@ -1,7 +1,7 @@
 import {
   LoadAccountByEmailRepository,
   LOAD_ACCOUNT_BY_EMAIL_REPOSITORY,
-} from '@/data/protocols/load-account-by-email.repository';
+} from '@/data/protocols/database/account/load-account-by-email.repository';
 import { Account } from '@/infra/database/mongodb/schemas';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DbAddAccount } from './db-add-account.usecase';
