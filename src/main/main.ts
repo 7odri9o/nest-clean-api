@@ -1,9 +1,16 @@
+import { createLogger } from 'winston';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigProperties } from './config';
+import { WinstonLoggerService, loggingConfig } from './logger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logger = new WinstonLoggerService(createLogger(loggingConfig));
+
+  const app = await NestFactory.create(AppModule, {
+    logger,
+    bufferLogs: true,
+  });
 
   app.flushLogs();
 
