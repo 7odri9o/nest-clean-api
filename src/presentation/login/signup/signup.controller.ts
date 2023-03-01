@@ -1,4 +1,10 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Inject,
+  InternalServerErrorException,
+  Post,
+} from '@nestjs/common';
 import { AddAccount, ADD_ACCOUNT } from '@/domain/usecases/add-account.usecase';
 import { AddAccountDto } from './add-account.dto';
 import {
@@ -15,11 +21,15 @@ export class SignUpController {
 
   @Post()
   async add(@Body() data: AddAccountDto) {
-    const account = await this.addAccount.add(data);
-    const accessToken = await this.authentication.auth({
-      email: account.email,
-      password: account.password,
-    });
-    return { accessToken };
+    try {
+      const account = await this.addAccount.add(data);
+      const accessToken = await this.authentication.auth({
+        email: account.email,
+        password: account.password,
+      });
+      return { accessToken };
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }
