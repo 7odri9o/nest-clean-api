@@ -1,5 +1,9 @@
-import { AccountModel, AddAccountModel } from '@/domain/models';
-import { AddAccount, ADD_ACCOUNT } from '@/domain/usecases/add-account.usecase';
+import { AccountModel } from '@/domain/models';
+import {
+  AddAccount,
+  ADD_ACCOUNT,
+  AddAccountParams,
+} from '@/domain/usecases/add-account.usecase';
 import {
   AUTHENTICATION,
   Authentication,
@@ -17,7 +21,7 @@ describe('SignUpController', () => {
   beforeEach(async () => {
     class AddAccountStub implements AddAccount {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      async add(params: AddAccountModel): Promise<AccountModel> {
+      async add(params: AddAccountParams): Promise<AccountModel> {
         return {
           name: 'any_name',
           email: 'any_email@email.com',
