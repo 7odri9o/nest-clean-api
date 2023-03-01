@@ -69,4 +69,23 @@ describe('DbAddAccount', () => {
 
     expect(promise).rejects.toThrow();
   });
+
+  test('should return null if LoadAccountByEmailRepository not returns null', async () => {
+    jest
+      .spyOn(loadAccountByEmailRepository, 'loadByEmail')
+      .mockResolvedValueOnce({
+        name: 'any_name',
+        email: 'any_email@email.com',
+        password: 'hashed_password',
+      });
+
+    const params = {
+      name: 'any_name',
+      email: 'any_email@email.com',
+      password: 'any_password',
+    };
+    const account = await sut.add(params);
+
+    expect(account).toBe(null);
+  });
 });
