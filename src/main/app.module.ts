@@ -1,9 +1,10 @@
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigProperties } from './config';
 import { InjectLog, LoggerModule } from './logger';
+import { SignUpModule } from './modules/signup.module';
 
 @Module({
-  imports: [ConfigModule, LoggerModule.forRootAsync()],
+  imports: [ConfigModule, LoggerModule.forRootAsync(), SignUpModule],
 })
 export class AppModule implements NestModule {
   constructor(
