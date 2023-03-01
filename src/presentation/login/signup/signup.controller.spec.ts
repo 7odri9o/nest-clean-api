@@ -97,4 +97,17 @@ describe('SignUpController', () => {
     };
     expect(authSpy).toHaveBeenCalledWith(expected);
   });
+
+  it('should throw if Authentication throws', async () => {
+    jest.spyOn(authentication, 'auth').mockRejectedValueOnce(new Error());
+
+    const params = {
+      name: 'any_name',
+      email: 'any_email@email.com',
+      password: 'any_password',
+    };
+    const promise = sut.add(params);
+
+    expect(promise).rejects.toThrow();
+  });
 });
