@@ -8,3 +8,9 @@ export type AppConfig = {
 export type Logging = {
   levels: LogLevel[];
 };
+
+export type DbConfig = {
+  url: string;
+  dbName: string;
+  debugQueries: boolean;
+};
