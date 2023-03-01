@@ -16,9 +16,10 @@ export class SignUpController {
   @Post()
   async add(@Body() data: AddAccountDto) {
     const account = await this.addAccount.add(data);
-    await this.authentication.auth({
+    const accessToken = await this.authentication.auth({
       email: account.email,
       password: account.password,
     });
+    return { accessToken };
   }
 }
