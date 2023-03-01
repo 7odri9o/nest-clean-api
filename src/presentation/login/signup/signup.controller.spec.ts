@@ -110,4 +110,16 @@ describe('SignUpController', () => {
 
     expect(promise).rejects.toThrow();
   });
+
+  it('should return accessToken if called with correct values', async () => {
+    const params = {
+      name: 'any_name',
+      email: 'any_email@email.com',
+      password: 'any_password',
+    };
+    const authentication = await sut.add(params);
+
+    expect(authentication).toHaveProperty('accessToken');
+    expect(typeof authentication.accessToken).toBe('string');
+  });
 });
