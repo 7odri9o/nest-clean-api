@@ -118,4 +118,17 @@ describe('DbAddAccount', () => {
     const expected = 'any_password';
     expect(hashSpy).toHaveBeenCalledWith(expected);
   });
+
+  it('should throw if HasherAdapter throws', async () => {
+    jest.spyOn(hasherAdapter, 'hash').mockRejectedValueOnce(new Error());
+
+    const params = {
+      name: 'any_name',
+      email: 'any_email@email.com',
+      password: 'any_password',
+    };
+    const promise = sut.add(params);
+
+    expect(promise).rejects.toThrow();
+  });
 });
