@@ -3,6 +3,10 @@ import {
   HasherAdapter,
 } from '@/data/protocols/criptography/hasher.dapter';
 import {
+  AddAccountRepository,
+  ADD_ACCOUNT_REPOSITORY,
+} from '@/data/protocols/database/account/add-account.repository';
+import {
   LOAD_ACCOUNT_BY_EMAIL_REPOSITORY,
   LoadAccountByEmailRepository,
 } from '@/data/protocols/database/account/load-account-by-email.repository';
@@ -19,6 +23,8 @@ export class DbAddAccount implements AddAccount {
     private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository,
     @Inject(HASHER_ADAPTER)
     private readonly hasherAdapter: HasherAdapter,
+    @Inject(ADD_ACCOUNT_REPOSITORY)
+    private readonly addAccountRepository: AddAccountRepository,
   ) {}
 
   async add(params: AddAccountParams): Promise<AccountModel> {
@@ -31,6 +37,10 @@ export class DbAddAccount implements AddAccount {
 
     const hashedPassword = await this.hasherAdapter.hash(params.password);
 
-    return null;
+    const newAddAccountParams: AddAccountParams = {
+      ...params,
+      password: hashedPassword,
+    };
+    return this.addAccountRepository.add(newAddAccountParams);
   }
 }
