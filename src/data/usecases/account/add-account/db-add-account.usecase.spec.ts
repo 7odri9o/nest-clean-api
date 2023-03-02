@@ -1,4 +1,8 @@
 import {
+  HasherAdapter,
+  HASHER_ADAPTER,
+} from '@/data/protocols/criptography/hasher.dapter';
+import {
   LoadAccountByEmailRepository,
   LOAD_ACCOUNT_BY_EMAIL_REPOSITORY,
 } from '@/data/protocols/database/account/load-account-by-email.repository';
@@ -7,11 +11,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DbAddAccount } from './db-add-account.usecase';
 
 describe('DbAddAccount', () => {
+  let hasherAdapter: HasherAdapter;
   let loadAccountByEmailRepository: LoadAccountByEmailRepository;
   let module: TestingModule;
   let sut: DbAddAccount;
 
   beforeEach(async () => {
+    class HasherAdapterStub implements HasherAdapter {
+      async hash(value: string): Promise<string> {
+        return 'hashed_value';
+      }
+    }
+
     class LoadAccountByEmailRepositoryStub
       implements LoadAccountByEmailRepository
     {
@@ -27,11 +38,16 @@ describe('DbAddAccount', () => {
           provide: LOAD_ACCOUNT_BY_EMAIL_REPOSITORY,
           useClass: LoadAccountByEmailRepositoryStub,
         },
+        {
+          provide: HASHER_ADAPTER,
+          useClass: HasherAdapterStub,
+        },
       ],
     }).compile();
 
     sut = module.get<DbAddAccount>(DbAddAccount);
     loadAccountByEmailRepository = module.get(LOAD_ACCOUNT_BY_EMAIL_REPOSITORY);
+    hasherAdapter = module.get(HASHER_ADAPTER);
   });
 
   it('should be defined', () => {
@@ -87,5 +103,19 @@ describe('DbAddAccount', () => {
     const account = await sut.add(params);
 
     expect(account).toBe(null);
+  });
+
+  it('should call Hasher with correct value', async () => {
+    const hashSpy = jest.spyOn(hasherAdapter, 'hash');
+
+    const params = {
+      name: 'any_name',
+      email: 'any_email@email.com',
+      password: 'any_password',
+    };
+    await sut.add(params);
+
+    const expected = 'any_password';
+    expect(hashSpy).toHaveBeenCalledWith(expected);
   });
 });
